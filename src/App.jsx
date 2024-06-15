@@ -3,7 +3,7 @@ import TopButtons from "./components/TopButtons"
 import Inputs from "./components/Inputs"
 import Time from "./components/Time"
 import Temparature from "./components/Temparature"
-
+import Forecast from "./components/Forecast"
 
 
 function App() {
@@ -14,6 +14,7 @@ function App() {
         <Inputs/>
         <Time/>
         <Temparature/>
+        <Forecast/>
       </div>
     </>
   )
