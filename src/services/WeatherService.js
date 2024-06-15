@@ -54,6 +54,7 @@ const formatCurrent = (data) => {
     timezone,
     lat,
     lon,
+    speed
   };
 };
 
