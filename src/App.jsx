@@ -8,7 +8,7 @@ import getWeatherData from "./services/WeatherService";
 import getFormattedWeatherData from "./services/WeatherService";
 
 function App() {
-  const [query, setQuery] = useState({ q: "london" });
+  const [query, setQuery] = useState({ q: "mumbai" });
   const [units, setUnits] = useState("metric");
   const [weather, setWeather] = useState(null);
 
@@ -32,8 +32,8 @@ function App() {
           <>
             <Time weather={weather}/>
             <Temparature weather={weather}/>
-            <Forecast />
-            <Forecast />
+            <Forecast title='3 hour step forecast' data={weather.hourly}/>
+            <Forecast title='daily forecast' data={weather.daily}/>
           </>
         )}
       </div>
