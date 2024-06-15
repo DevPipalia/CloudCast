@@ -13,9 +13,8 @@ const getWeatherData = (infoType, searchParams) => {
     .then((data) => data);
 };
 
-const iconURLFromCode=(icon)=> `http://openweathermap.org/img/wn/${icon}@2x.png`
-
-
+const iconURLFromCode = (icon) =>
+  `http://openweathermap.org/img/wn/${icon}@2x.png`;
 
 const formatToLocalTime = (
   secs,
@@ -35,24 +34,58 @@ const formatCurrent = (data) => {
     timezone,
   } = data;
 
-  const {main:details,icon} = weather[0]
-  const formattedLocalTime=formatToLocalTime(dt,timezone)
+  const { main: details, icon } = weather[0];
+  const formattedLocalTime = formatToLocalTime(dt, timezone);
 
   return {
-  temp,
-  feels_like,
-  temp_min,
-  temp_max,
-  humidity,
-  name,
-  country,
-  sunrise: formatToLocalTime(sunrise, timezone, 'hh:mm a'),
-  sunset: formatToLocalTime(sunset, timezone, 'hh:mm a'),
-  details,
-  icon:iconURLFromCode(icon),
-  formattedLocalTime,
+    temp,
+    feels_like,
+    temp_min,
+    temp_max,
+    humidity,
+    name,
+    country,
+    sunrise: formatToLocalTime(sunrise, timezone, "hh:mm a"),
+    sunset: formatToLocalTime(sunset, timezone, "hh:mm a"),
+    details,
+    icon: iconURLFromCode(icon),
+    formattedLocalTime,
+    dt,
+    timezone,
+    lat,
+    lon,
+  };
 };
 
+const formatForecastWeather = (secs, offset, data) => {
+  const hourly = data
+    .filter((f) => f.dt > secs)
+    .slice(0, 5)
+    .map((f) => ({
+      temp: f.main.temp,
+      title: formatToLocalTime(f.dt, offset, "hh:mm a"),
+      icon: iconURLFromCode(f.weather[0].icon),
+      date: f.dt_txt,
+    }));
+
+    const currentDate = new Date().getDate();
+    const daily = data
+      .filter((f) => {
+        const forecastDate = new Date(f.dt_txt).getDate();
+        return forecastDate !== currentDate;
+      })
+      .map((f) => ({
+        temp: f.main.temp,
+        title: formatToLocalTime(f.dt, offset, "ccc"),
+        icon: iconURLFromCode(f.weather[0].icon),
+        date: f.dt_txt,
+      }))
+      .filter((f, i, arr) => {
+        const forecastDate = new Date(f.date).getDate();
+        return i === 0 || forecastDate !== new Date(arr[i - 1].date).getDate();
+      });
+
+  return { hourly, daily };
 };
 
 const getFormattedWeatherData = async (searchParams) => {
@@ -60,8 +93,16 @@ const getFormattedWeatherData = async (searchParams) => {
     "weather",
     searchParams
   ).then(formatCurrent);
-  
-  return {...formattedCurrentWeather}
+
+  const { dt, lat, lon, timezone } = formattedCurrentWeather;
+
+  const formattedForecastWeather = await getWeatherData("forecast", {
+    lat,
+    lon,
+    units: searchParams.units,
+  }).then((d) => formatForecastWeather(dt, timezone, d.list));
+
+  return { ...formattedCurrentWeather, ...formattedForecastWeather };
 };
 
 export default getFormattedWeatherData;
