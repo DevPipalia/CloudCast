@@ -27,7 +27,7 @@ const TopButtons = ({ setQuery }) => {
 
   return (
     <>
-      <div className="flex justify-around items-center my-6 text-white">
+      <div className="flex justify-between items-center my-6 text-white">
         {cities.map((city) => (
           <button
             key={city.id}

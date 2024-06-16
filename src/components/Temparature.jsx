@@ -40,7 +40,7 @@ const Temparature = ({weather:{details,icon,temp,temp_min,temp_max,sunrise,sunse
         <div className="flex items-center justify-center py-6 text-xl text-cyan-300">
           <p>{details}</p>
         </div>
-        <div className="flex items-center justify-between py-3">
+        <div className="flex items-center justify-between py-3 mx-5 mb-6">
           <img
             src={icon}
             className="w-20"
@@ -62,7 +62,7 @@ const Temparature = ({weather:{details,icon,temp,temp_min,temp_max,sunrise,sunse
           </div>
         </div>
 
-        <div className="flex flex-row items-center justify-center space-x-10 text-sm py-3 text-white ">
+        <div className="flex flex-row items-center justify-center space-x-10 text-sm py-3 mb-6 text-white ">
 
         {
             horizontalDetails.map(({id,Icon,Title,Value})=>(
